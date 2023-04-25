@@ -1,10 +1,5 @@
 import numpy as np
-import pandas as pd
 from sklearn.datasets import load_breast_cancer, load_digits
-import math
-import collections
-from tabulate import tabulate
-import random
 
 
 # transferindo valores do load para variaveis para depois transformar em uma funcao
@@ -56,7 +51,7 @@ def trainNB(data, labels):
     numData.sort()
 
     # criando uma matriz "matrizSoma" em que as dimensoes representam: (resultados X numero de atributos X numero de valores para os atributos)
-
+    # pData (numero de atributos X numero de valores para os atributos X resultados)
     matrizSoma = np.zeros((len(numLabels), num_colunas, len(numData)), dtype=float)
     pData = np.zeros((num_colunas, len(numData), len(numLabels)), dtype=float)
 
@@ -97,15 +92,16 @@ def predictNB(pLabels, pData, instance, numLabels, numData):
     pResults = [0] * len(numLabels)
 
     # calculando a probabilidade para cada resultado
-    for result in range(len(numLabels)):
+    for result in range(len(pResults)):
         # probabilidade inicial eh a probabilidade do resultado em si
         p = pLabels[result]
 
         # para cada atributo, calcula a probabilidade do valor do atributo dado o resultado
         for attribute in range(num_linhas):
             attribute_value = instance[attribute]
-            value_index = np.where(numData == attribute_value)[0][0]
-            p *= pData[attribute][value_index][result]
+            for i in range(len(numData)):
+                if np.any(numData[i] == attribute_value):
+                    p *= pData[attribute][i][result]
 
         # adiciona a probabilidade do resultado na lista de probabilidades
         pResults[result] = p
@@ -118,20 +114,9 @@ X, y = load_digits(return_X_y=True)
 
 pLabels, pData, numLabels, numData = trainNB(X, y)
 
-instance = [[0 for j in range(8)] for i in range(8)]
-
-# Preencher a matriz com valores aleatórios entre 0 e 16
-for i in range(8):
-    for j in range(8):
-        instance[i][j] = random.randint(0, 16)
-
-# Imprimir a matriz
-for i in range(8):
-    for j in range(8):
-        print(instance[i][j], end=' ')
-    print()
+instance = X[3]
 
 result = predictNB(pLabels, pData, instance, numLabels, numData)
 
-print(result)
-
+print(f'label: {y[3]}')
+print(f'predict: {result}')
