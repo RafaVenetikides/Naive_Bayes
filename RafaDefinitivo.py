@@ -58,8 +58,8 @@ numData.sort()
 
 # criando uma matriz "matrizSoma" em que as dimensoes representam: (resultados X numero de atributos X numero de valores para os atributos)
 
-matrizSoma = np.zeros((len(numLabels), num_colunas, len(numData)), dtype= float)
-pData = np.zeros((num_colunas, len(numData), len(numLabels)), dtype= float)
+matrizSoma = np.zeros((len(numLabels), num_colunas, len(numData)), dtype=float)
+pData = np.zeros((num_colunas, len(numData), len(numLabels)), dtype=float)
 
 print(f"linhas: {len(pData)}, colunas: {len(pData[0])},profundidade: {len(pData[0][0])}")
 
@@ -88,5 +88,7 @@ for label in range(len(numLabels)):
             value_index = numData.index(attribute_value)
             if labels[instance] == numLabels[label]:
                 matrizSoma[label][attribute][value_index] += 1
+
+print(matrizSoma)
 
 # MATRIZ GERADA CORRETAMENTE!!!
