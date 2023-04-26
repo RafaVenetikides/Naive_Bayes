@@ -1,8 +1,6 @@
 import numpy as np
 from sklearn.datasets import load_breast_cancer, load_digits
-
-
-# transferindo valores do load para variaveis para depois transformar em uma funcao
+from sklearn.model_selection import train_test_split
 
 def trainNB(data, labels):
     # num_linhas = quantidade de instancias
@@ -55,14 +53,7 @@ def trainNB(data, labels):
     matrizSoma = np.zeros((len(numLabels), num_colunas, len(numData)), dtype=float)
     pData = np.zeros((num_colunas, len(numData), len(numLabels)), dtype=float)
 
-    print(f"linhas: {len(pData)}, colunas: {len(pData[0])},profundidade: {len(pData[0][0])}")
-
-    print(numData)
-    print(numLabels)
-
     database = np.hstack((data, labels.reshape(-1, 1)))
-
-    print(f'database linhas: {len(database)}, database colunas: {len(database[0])}')
 
     # Realizando a soma dos valores por posicao, tipo de tom e resultado
 
@@ -73,6 +64,8 @@ def trainNB(data, labels):
                 value_index = numData.index(attribute_value)
                 if labels[instance] == numLabels[label]:
                     matrizSoma[label][attribute][value_index] += 1
+
+    # Com a soma, fazendo a divisão para obter as probabilidades
 
     for label in range(len(numLabels)):
         for attribute in range(num_colunas):
@@ -112,11 +105,21 @@ def predictNB(pLabels, pData, instance, numLabels, numData):
 
 X, y = load_digits(return_X_y=True)
 
+X, X_val, y, y_val = train_test_split(X, y, train_size=0.8, random_state=42, stratify=y)
+
 pLabels, pData, numLabels, numData = trainNB(X, y)
 
-instance = X[3]
+certos = 0
+cont = 0
+erros = 0
 
-result = predictNB(pLabels, pData, instance, numLabels, numData)
+for predict in range(len(y_val)):
+    try:
+        if predictNB(pLabels, pData, X_val[predict], numLabels, numData) == y_val[predict]:
+            certos += 1
+        cont += 1
+    except:
+        erros += 1
 
-print(f'label: {y[3]}')
-print(f'predict: {result}')
+
+print(f'acurácia: {certos/cont}')
