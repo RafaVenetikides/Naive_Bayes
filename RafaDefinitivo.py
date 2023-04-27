@@ -103,7 +103,7 @@ def predictNB(pLabels, pData, instance, numLabels, numData):
     return numLabels[pResults.index(max(pResults))]
 
 
-X, y = load_digits(return_X_y=True)
+X, y = load_breast_cancer(return_X_y=True)
 
 X, X_val, y, y_val = train_test_split(X, y, train_size=0.8, random_state=42, stratify=y)
 
